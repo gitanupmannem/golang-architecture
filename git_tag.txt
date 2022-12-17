@@ -1,6 +1,12 @@
 version a commit with git tag
+git pull 
 git add -A
 git commit -m "xxx"
 git push
 git tag v1.x.x
 git push --tags
+
+to list all tags
+git tag
+to view a commit with tag#
+git checkout <tag#>
