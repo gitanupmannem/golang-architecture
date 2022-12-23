@@ -6,43 +6,59 @@ type person struct {
 	first string
 }
 
-func (p person) speak() {
-	fmt.Println("from a person - the name is, ", p.first)
+// mongo, postg are maps that take int and store person struct
+type mongo map[int]person
+type postg map[int]person
+
+// func (receiver) name(parameters)
+func (m mongo) save(n int, p person) {
+	m[n] = p
 }
 
-type secreteAgent struct {
-	person
-	ltk bool
+// func (receiver) name(parameters) returntype
+func (m mongo) retrieve(n int) person {
+	return m[n]
 }
 
-func (sa secreteAgent) speak() {
-	fmt.Println("i am a secrete agend, do i have the license to kill? ", sa.ltk)
+func (pg postg) save(n int, p person) {
+	pg[n] = p
+}
+func (pg postg) retrieve(n int) person {
+	return pg[n]
 }
 
-// person type and secreteAgent type both are concrete types
-// human is an abstract type
-type human interface {
-	speak()
+type accessor interface {
+	save(n int, p person)
+	retrieve(n int) person
+}
+
+func put(a accessor, n int, p person) {
+	a.save(n, p)
+}
+func get(a accessor, n int) person {
+	return a.retrieve(n)
 }
 
 func main() {
+	dbm := mongo{}
+	dbp := postg{}
 
 	p1 := person{
-		first: "Mr. KKK",
+		first: "goama",
+	}
+	p2 := person{
+		first: "kana",
 	}
 
-	sa1 := secreteAgent{
-		person: person{
-			first: "James",
-		},
-		ltk: true,
-	}
-
-	var x, y human
-	x = p1
-	y = sa1
-
-	x.speak()
-	y.speak()
+	put(dbm, 1, p1)
+	put(dbm, 2, p2)
+	fmt.Println("2 records saved to mongo")
+	fmt.Println(get(dbm, 1))
+	fmt.Println(get(dbm, 2))
+	put(dbp, 1, p1)
+	put(dbp, 2, p2)
+	fmt.Println("2 records saved to postgres")
+	fmt.Println(get(dbp, 1))
+	fmt.Println(get(dbp, 2))
 
 }
