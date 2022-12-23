@@ -10,3 +10,7 @@ to list all tags
 git tag
 to view a commit with tag#
 git checkout <tag#>
+
+to delete tags
+git push --delete tag <tagname> (remote copy)
+git tag -d <tagname> (local copy)
