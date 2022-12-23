@@ -32,6 +32,18 @@ type accessor interface {
 	retrieve(n int) person
 }
 
+type personService struct {
+	a accessor
+}
+
+func (ps personService) get(n int) (person, error) {
+	p := ps.a.retrieve(n)
+	if p.first == "" {
+		return person{}, fmt.Errorf("no person with n %d", n)
+	}
+	return p, nil
+}
+
 func put(a accessor, n int, p person) {
 	a.save(n, p)
 }
@@ -50,6 +62,10 @@ func main() {
 		first: "kana",
 	}
 
+	ps := personService{
+		a: dbm,
+	}
+
 	put(dbm, 1, p1)
 	put(dbm, 2, p2)
 	fmt.Println("2 records saved to mongo")
@@ -61,4 +77,7 @@ func main() {
 	fmt.Println(get(dbp, 1))
 	fmt.Println(get(dbp, 2))
 
+	fmt.Println(ps.get(1))
+	fmt.Println(ps.get(2))
+	fmt.Println(ps.get(3))
 }
